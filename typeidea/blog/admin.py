@@ -13,7 +13,7 @@ from .adminforms import PostAdminForm
 
 class PostInline(admin.TabularInline):
     '''分类中内置文章编辑'''
-    fields = ('title', 'desc')
+    fields = ('title', 'desc', 'owner')
     extra = 1
     model = Post
 

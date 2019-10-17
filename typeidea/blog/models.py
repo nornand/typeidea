@@ -63,6 +63,34 @@ class Post(models.Model):
     owner = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name='作者')
     created_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
 
+    @staticmethod
+    def get_by_tag(tag_id):
+        '''根据标签获取文章'''
+        post_list = []
+        try:
+            tag = Tag.objects.get(id=tag_id)
+        except Tag.DoesNotExist:
+            tag = None
+        else:
+            post_list = tag.post_set.filter(status=Post.STATUS_NORMAL)\
+                .select_related('owner', 'category')
+
+        return post_list, tag
+
+    @staticmethod
+    def get_by_category(category_id):
+        '''根据种类获取文章'''
+        post_list = []
+        try:
+            category = Category.objects.get(id=category_id)
+        except Category.DoesNotExist:
+            category = None
+        else:
+            post_list = category.post_set.filter(status=Post.STATUS_NORMAL)\
+                .select_related('owner', 'category')
+
+        return post_list, category
+
     class Meta:
         verbose_name = verbose_name_plural = '文章'
         ordering = ['-id']
